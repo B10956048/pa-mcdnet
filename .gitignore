@@ -1,0 +1,40 @@
+# ── Large data & model files (obtain separately — see README) ──
+*.h5
+*.tfrecord
+*.pkl
+*.npz
+raw_sample_for_hpc/
+*.zip
+*.7z
+
+# ── Run outputs ──
+results/
+Transfer_result/
+infer_out/
+eval_out/
+_smoke_*/
+_fields/
+*_geo_*.png
+
+# ── Python ──
+__pycache__/
+*.pyc
+*.pyo
+.ipynb_checkpoints/
+*.egg-info/
+.venv/
+venv/
+
+# ── OS / editors ──
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+
+# ── Raw radar sample data (CWA data policy — not redistributable) ──
+samples/
+
+# Note: data/locked_*.json (test-set definitions) ARE tracked. Raw Taiwan radar
+# sample data is NOT distributed here (CWA data policy — see the Data
+# Availability Statement); NWP-simulated demo cases live in the Zenodo deposit.

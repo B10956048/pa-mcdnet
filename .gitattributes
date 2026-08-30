@@ -1,0 +1,10 @@
+# 文字檔自動判斷,repo 內一律以 LF 儲存(跨平台一致,消除 CRLF 警告)
+* text=auto eol=lf
+
+# 明確標記二進位(不做行尾轉換)
+*.gz  binary
+*.h5  binary
+*.shp binary
+*.dbf binary
+*.shx binary
+*.prj binary
