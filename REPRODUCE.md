@@ -79,7 +79,7 @@ Synthetic vortex, V_nyq = 21.16 m/s, 141,120 valid gates
   RMSE vs. true velocity   : 0.00 m/s
 ```
 
- Its output describes one synthetic field only; it is a functional
+This output describes one synthetic field only; it is a functional
 check, not a reproduction of the manuscript metrics.
 
 ## 2. Inference on your own radar files
