@@ -7,12 +7,14 @@ title: >-
   physics-aware Doppler radar velocity dealiasing
 type: software
 authors:
-  - family-names: Zhang
-    given-names: Jing-Yang
-    affiliation: National Chung Hsing University
   - family-names: Lin
     given-names: Kuan-Cheng
     affiliation: National Chung Hsing University
+  - family-names: Zhang
+    given-names: Jing-Yang
+    affiliation: National Chung Hsing University
+  - family-names: Fang
+    given-names: Wei-Ting
   - family-names: Chang
     given-names: Pao-Liang
     affiliation: Central Weather Administration
