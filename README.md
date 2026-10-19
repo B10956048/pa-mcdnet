@@ -6,7 +6,7 @@
 > archived on Zenodo as *PA-MCDNet: code, trained weights and evaluation-set
 > definitions for physics-aware Doppler radar velocity dealiasing*.
 > To reproduce the results reported in the manuscript, use and cite the
-> archived version: **https://doi.org/10.5281/zenodo.XXXXXXXX**.
+> archived version: **https://doi.org/10.5281/zenodo.23479449**.
 > Concept DOI for all versions of PA-MCDNet:
 > https://doi.org/10.5281/zenodo.22167560.
 >
@@ -243,7 +243,7 @@ See [docs/USAGE.md](docs/USAGE.md) for every parameter.
 
 The trained weight is not tracked in the repository (file size). The final
 PA-MCDNet weight reported in the manuscript is archived on Zenodo
-(https://doi.org/10.5281/zenodo.XXXXXXXX) as `pa_mcdnet_M6_headline.h5`
+(https://doi.org/10.5281/zenodo.23479449) as `pa_mcdnet_M6_headline.h5`
 (~82 MB, MD5 `1b1685ec72c7a765a6f957afb518a551`). Save it as
 `weights/pa_mcdnet_M6_headline.h5` and pass that path to `--model_path`.
 A weight you train yourself is produced as `best_model_manual.h5` (see Training).
@@ -290,7 +290,7 @@ Each part of this release has its own terms:
 ## Citation
 
 If you use this software, please cite the archived version
-(https://doi.org/10.5281/zenodo.XXXXXXXX); citation metadata is in
+(https://doi.org/10.5281/zenodo.23479449); citation metadata is in
 [CITATION.cff](CITATION.cff). The accompanying manuscript is Lin, Zhang, Fang,
 and Chang, *Physics-Aware Deep Learning for Radar Doppler Velocity Dealiasing
 Using NWP Simulations and Observations* (submitted to *Artificial Intelligence

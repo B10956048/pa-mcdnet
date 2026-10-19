@@ -17,11 +17,11 @@ authors:
     given-names: Pao-Liang
     affiliation: Central Weather Administration
 version: 1.0.1
-doi: 10.5281/zenodo.XXXXXXXX
+doi: 10.5281/zenodo.23479449
 date-released: "2026-10-20"
 identifiers:
   - type: doi
-    value: 10.5281/zenodo.XXXXXXXX
+    value: 10.5281/zenodo.23479449
     description: Version DOI for this release (use for reproducing the manuscript)
   - type: doi
     value: 10.5281/zenodo.22167560

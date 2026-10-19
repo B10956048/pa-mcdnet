@@ -9,7 +9,7 @@ Earth Systems*).
 
 | Identifier | Use |
 |---|---|
-| **Version DOI [10.5281/zenodo.XXXXXXXX](https://doi.org/10.5281/zenodo.XXXXXXXX)** | The fixed archive for this manuscript. Use and cite this one to reproduce the reported results. |
+| **Version DOI [10.5281/zenodo.23479449](https://doi.org/10.5281/zenodo.23479449)** | The fixed archive for this manuscript. Use and cite this one to reproduce the reported results. |
 | Concept DOI [10.5281/zenodo.22167560](https://doi.org/10.5281/zenodo.22167560) | Resolves to the latest version of PA-MCDNet (all versions). |
 | GitHub tag `v1.0.1` | The same source code as the version DOI. |
 

@@ -5,7 +5,7 @@
 > **AIES 投稿論文之重現典藏。** 本 repository 於 Zenodo 典藏，正式標題為
 > *PA-MCDNet: code, trained weights and evaluation-set definitions for
 > physics-aware Doppler radar velocity dealiasing*。
-> 重現論文結果請使用並引用此典藏版本：**https://doi.org/10.5281/zenodo.XXXXXXXX**。
+> 重現論文結果請使用並引用此典藏版本：**https://doi.org/10.5281/zenodo.23479449**。
 > 涵蓋所有版本的 Concept DOI：https://doi.org/10.5281/zenodo.22167560。
 >
 > 軟體版本：**v1.0.1**（Git tag `v1.0.1`）。Zenodo 頁面上的「Version」是典藏紀錄的版次，不是軟體版號。
@@ -201,7 +201,7 @@ python transfer_learning_complete.py \
 
 ## 模型權重
 
-訓練好的權重因檔案體積未納入版本控制。論文所報告的最終 PA-MCDNet 權重典藏於 Zenodo（https://doi.org/10.5281/zenodo.XXXXXXXX），檔名 `pa_mcdnet_M6_headline.h5`（約 82 MB，MD5 `1b1685ec72c7a765a6f957afb518a551`）。請存為 `weights/pa_mcdnet_M6_headline.h5`，並將此路徑傳給 `--model_path`。自行訓練的權重會產生為 `best_model_manual.h5`（見訓練一節）。
+訓練好的權重因檔案體積未納入版本控制。論文所報告的最終 PA-MCDNet 權重典藏於 Zenodo（https://doi.org/10.5281/zenodo.23479449），檔名 `pa_mcdnet_M6_headline.h5`（約 82 MB，MD5 `1b1685ec72c7a765a6f957afb518a551`）。請存為 `weights/pa_mcdnet_M6_headline.h5`，並將此路徑傳給 `--model_path`。自行訓練的權重會產生為 `best_model_manual.h5`（見訓練一節）。
 
 ## 資料
 
@@ -236,4 +236,4 @@ git clone https://github.com/mit-ll/unet-vda.git unet-vda-main
 
 ## 引用
 
-使用本軟體請引用典藏版本（https://doi.org/10.5281/zenodo.XXXXXXXX）；引用資訊見 [CITATION.cff](CITATION.cff)。對應論文為 Lin, Zhang, Fang, and Chang, *Physics-Aware Deep Learning for Radar Doppler Velocity Dealiasing Using NWP Simulations and Observations*（投稿至 *Artificial Intelligence for the Earth Systems*）。
+使用本軟體請引用典藏版本（https://doi.org/10.5281/zenodo.23479449）；引用資訊見 [CITATION.cff](CITATION.cff)。對應論文為 Lin, Zhang, Fang, and Chang, *Physics-Aware Deep Learning for Radar Doppler Velocity Dealiasing Using NWP Simulations and Observations*（投稿至 *Artificial Intelligence for the Earth Systems*）。
