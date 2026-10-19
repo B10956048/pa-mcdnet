@@ -1763,7 +1763,7 @@ def main():
     parser.add_argument('--output_dir', type=str, default='results/transfer_learning',
                        help='輸出目錄')
     parser.add_argument('--freeze_ratio', type=float, default=0.8,
-                       help='凍結比例（0.8 = 凍結 80% 層）')
+                       help='凍結比例（0.8 = 凍結 80%% 層）')
     parser.add_argument('--learning_rate', type=float, default=5e-5,
                        help='學習率')
     parser.add_argument('--epochs', type=int, default=50,

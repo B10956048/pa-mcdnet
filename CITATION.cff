@@ -1,0 +1,42 @@
+cff-version: 1.2.0
+message: >-
+  If you use this software, please cite the archived version below.
+  To reproduce the results of the accompanying manuscript, use this version DOI.
+title: >-
+  PA-MCDNet: code, trained weights and evaluation-set definitions for
+  physics-aware Doppler radar velocity dealiasing
+type: software
+authors:
+  - family-names: Zhang
+    given-names: Jing-Yang
+    affiliation: National Chung Hsing University
+  - family-names: Lin
+    given-names: Kuan-Cheng
+    affiliation: National Chung Hsing University
+  - family-names: Chang
+    given-names: Pao-Liang
+    affiliation: Central Weather Administration
+version: 1.0.1
+doi: 10.5281/zenodo.XXXXXXXX
+date-released: "2026-10-20"
+identifiers:
+  - type: doi
+    value: 10.5281/zenodo.XXXXXXXX
+    description: Version DOI for this release (use for reproducing the manuscript)
+  - type: doi
+    value: 10.5281/zenodo.22167560
+    description: Concept DOI for all versions of PA-MCDNet
+repository-code: "https://github.com/B10956048/pa-mcdnet"
+license: MIT
+abstract: >-
+  Deep-learning model for Doppler radial-velocity dealiasing of weather-radar
+  data (U-Net with dual decoders, physics-aware spatial-consistency loss, and
+  two-stage transfer learning from NWP simulations to radar observations).
+  Source code is MIT-licensed; the trained weights and locked test-set
+  definitions are CC BY 4.0. CWA radar data are not included.
+keywords:
+  - Doppler radar
+  - velocity dealiasing
+  - deep learning
+  - transfer learning
+  - Taiwan

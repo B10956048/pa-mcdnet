@@ -59,7 +59,7 @@ does not. One of four modes is selected by the arguments:
 | Trigger | Mode | Ground truth needed |
 |---|---|---|
 | `--inference_input` (file or folder) | Pure inference — reads raw, Nyquist from header, outputs dealiased field + geo images | No |
-| `--realobs_force_cases_file` (json) | Locked evaluation — the JSON lists raw + gt (fully reproducible) | Yes |
+| `--realobs_force_cases_file` (json) | Locked evaluation — the JSON lists raw + gt (fully reproducible); add `--realobs_root <data root>` to replace the `/path/to/typhoonnew` placeholder in its paths | Yes |
 | `--realobs_root` (folder) | Scan a folder, auto-pair raw + gt | Yes |
 | none | NWP mode (`--nwp_root` + `--h5_path`) | Yes |
 

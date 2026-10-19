@@ -320,7 +320,10 @@ def build_realobs_cases(realobs_root: str, elevation: str = 'all',
     return cases
 
 
-def build_realobs_cases_from_force_file(force_cases_file):
+LOCKED_PATH_PLACEHOLDER = '/path/to/typhoonnew'
+
+
+def build_realobs_cases_from_force_file(force_cases_file, data_root=None):
     """
     從 locked realobs JSON 直接讀 cases，繞過 realobs_root 掃描。
 
@@ -350,18 +353,26 @@ def build_realobs_cases_from_force_file(force_cases_file):
         forced = json.load(f)
     print(f"\n[REALOBS FORCE] 載入 {len(forced)} 個 locked cases from {force_cases_file}")
 
+    # 公開版 JSON 的路徑以 LOCKED_PATH_PLACEHOLDER 開頭；給 data_root（即 --realobs_root）
+    # 時替換成本機資料根目錄，目錄結構需與 JSON 內相同（<root>/test/<event>/...）
+    def _resolve(p):
+        p = p.replace('\\', '/')
+        if data_root and p.startswith(LOCKED_PATH_PLACEHOLDER):
+            return os.path.join(data_root, p[len(LOCKED_PATH_PLACEHOLDER):].lstrip('/'))
+        return p
+
     cases = []
     missing = 0
+    first_missing = None
     for entry in forced:
-        raw_path = entry['raw']
-        gt_path  = entry['gt']
+        raw_path = _resolve(entry['raw'])
+        gt_path  = _resolve(entry['gt'])
 
         # 驗證檔案存在（locked JSON 內 path 是當時生成時的環境）
-        if not os.path.exists(raw_path):
+        if not os.path.exists(raw_path) or not os.path.exists(gt_path):
             missing += 1
-            continue
-        if not os.path.exists(gt_path):
-            missing += 1
+            if first_missing is None:
+                first_missing = raw_path if not os.path.exists(raw_path) else gt_path
             continue
 
         # 轉成 test loop 預期的 case dict 格式
@@ -388,6 +399,9 @@ def build_realobs_cases_from_force_file(force_cases_file):
 
     if missing > 0:
         print(f"   ⚠️  跳過 {missing} 個檔案缺失的 case (path 在 locked JSON 但本機沒檔)")
+        print(f"       first missing file: {first_missing}")
+        if not data_root:
+            print(f"       hint: pass --realobs_root <data root> to replace '{LOCKED_PATH_PLACEHOLDER}'")
     print(f"   ✅ 有效 cases: {len(cases)}")
     return cases
 
@@ -2521,7 +2535,8 @@ def main():
         print("[PHASE 1] 真實觀測資料掃描")
         print(f"{'='*60}")
         if args.realobs_force_cases_file:
-            test_cases = build_realobs_cases_from_force_file(args.realobs_force_cases_file)
+            test_cases = build_realobs_cases_from_force_file(args.realobs_force_cases_file,
+                                                             data_root=args.realobs_root)
             # 排除指定站（locked JSON 仍可套 station filter）
             if exclude_set:
                 before = len(test_cases)

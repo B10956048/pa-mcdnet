@@ -37,4 +37,5 @@ samples/
 
 # Note: data/locked_*.json (test-set definitions) ARE tracked. Raw Taiwan radar
 # sample data is NOT distributed here (CWA data policy — see the Data
-# Availability Statement); NWP-simulated demo cases live in the Zenodo deposit.
+# Availability Statement). The trained weight is in the Zenodo deposit.
+weights/

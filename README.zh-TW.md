@@ -2,6 +2,15 @@
 
 [English](README.md) | **繁體中文**
 
+> **AIES 投稿論文之重現典藏。** 本 repository 於 Zenodo 典藏，正式標題為
+> *PA-MCDNet: code, trained weights and evaluation-set definitions for
+> physics-aware Doppler radar velocity dealiasing*。
+> 重現論文結果請使用並引用此典藏版本：**https://doi.org/10.5281/zenodo.XXXXXXXX**。
+> 涵蓋所有版本的 Concept DOI：https://doi.org/10.5281/zenodo.22167560。
+>
+> 軟體版本：**v1.0.1**（Git tag `v1.0.1`）。Zenodo 頁面上的「Version」是典藏紀錄的版次，不是軟體版號。
+> 逐步重現說明見 [REPRODUCE.md](REPRODUCE.md)。
+
 用於氣象雷達資料**都卜勒速度反折錯**的深度學習模型。當實際風速超過奈奎斯特速度時，觀測到的徑向速度會發生折返；PA-MCDNet 將其還原為連續且符合物理的速度場。本模型定位為現行作業化反折錯演算法（如 VDAQC / SFDA）的輔助與交叉驗證工具，並非取代。
 
 ## 方法
@@ -60,10 +69,13 @@ flowchart LR
 ├── transfer_learning_complete.py# 訓練：Stage 1（從零）與 Stage 2（微調）
 ├── manual_weight_transfer.py    # Stage 2 後產生 best_model_manual.h5
 ├── test_nwp_comparison.py       # 推論與評估（主要進入點）
+├── verify_weights.py            # 不需 CWA 資料即可檢查公開權重
 ├── unet_model/                  # 模型定義（編碼器／解碼器／層）
 ├── mapdata201805310314/         # 地理可視化用的台灣 shapefile
 ├── data/locked_*_test_set.json  # 鎖定測試集定義
 ├── docs/USAGE.md                # 每支程式的完整參數說明
+├── REPRODUCE.md                 # 論文重現說明
+├── CITATION.cff                 # 引用資訊
 └── ... （其他相依模組與工具，見下方「程式一覽」）
 ```
 
@@ -83,6 +95,7 @@ flowchart LR
 | `transfer_learning_complete.py` | 訓練 —— Stage 1（從零）與 Stage 2（微調） |
 | `manual_weight_transfer.py` | Stage 2 後產生可部署的 `best_model_manual.h5` |
 | `test_nwp_comparison.py` | 推論與評估（主要進入點） |
+| `verify_weights.py` | 不需 CWA 資料即可檢查公開權重（MD5、載入、合成場測試） |
 | `build_locked_test_sets.py` | 建立固定（鎖定）測試集 |
 | `scan_realobs_alias.py` | 掃描真實觀測的折返比例並快取 |
 | `unet_model/` | 模型定義（編碼器、解碼器、層） |
@@ -102,7 +115,7 @@ conda activate pyart2
 # 核心套件（版本鎖定為實測環境）
 pip install tensorflow==2.10.0 \
             numpy==1.26.4 scipy==1.15.3 pandas==2.3.2 h5py==3.14.0 \
-            pyarrow==22.0.0 matplotlib==3.8.4 \
+            pyarrow==22.0.0 matplotlib==3.8.4 seaborn==0.13.2 tqdm==4.67.1 \
             scikit-image==0.25.1 scikit-learn==1.6.1 opencv-python==4.11.0.86
 ```
 
@@ -120,7 +133,7 @@ pip install arm_pyart basemap basemap-data pyproj==3.6.1 pillow
 
 ```bash
 python test_nwp_comparison.py \
-  --model_path path/to/best_model_manual.h5 \
+  --model_path weights/pa_mcdnet_M6_headline.h5 \
   --inference_input path/to/ppi_folder \
   --output_dir infer_out \
   --use_physics_model \
@@ -130,7 +143,7 @@ python test_nwp_comparison.py \
 
 輸出落在 `infer_out/`：反折後速度場（`_fields/*.npz`）與地理圖（`*_geo_*.png`）。`--inference_input` 可接受單一 `.gz` 檔或整個資料夾；奈奎斯特速度自檔頭讀取。
 
-> **範例資料。** 此處不附雷達原始檔：CWA 觀測、作業參考產品、以及 NWP 模擬場皆受中央氣象署資料政策規範，作者無法轉散布（見資料可用性聲明）。若要試跑，請將 `--inference_input` 指向你自己的 PPI `.gz` 檔。訓練權重放在 Zenodo 典藏；此處的 `data/locked_*_test_set.json` 已列明用到哪些案例。
+> **範例資料。** 此處不附雷達原始檔：CWA 觀測、作業參考產品、以及 NWP 模擬場皆受中央氣象署資料政策規範，作者無法轉散布（見資料可用性聲明）。不需任何 CWA 資料即可用 `python verify_weights.py --model_path weights/pa_mcdnet_M6_headline.h5` 檢查公開權重；若要對雷達資料執行，請將 `--inference_input` 指向你自己的 PPI `.gz` 檔。此處的 `data/locked_*_test_set.json` 已列明用到哪些案例。
 
 ## 範例
 
@@ -188,7 +201,7 @@ python transfer_learning_complete.py \
 
 ## 模型權重
 
-訓練好的權重因體積與資料授權未納入版本控制。可部署的權重 `best_model_manual.h5`（約 79 MB）請向作者索取，或在部署機器上位於 `results/final_model/best_model_manual.h5`。將其路徑傳給 `--model_path`。
+訓練好的權重因檔案體積未納入版本控制。論文所報告的最終 PA-MCDNet 權重典藏於 Zenodo（https://doi.org/10.5281/zenodo.XXXXXXXX），檔名 `pa_mcdnet_M6_headline.h5`（約 82 MB，MD5 `1b1685ec72c7a765a6f957afb518a551`）。請存為 `weights/pa_mcdnet_M6_headline.h5`，並將此路徑傳給 `--model_path`。自行訓練的權重會產生為 `best_model_manual.h5`（見訓練一節）。
 
 ## 資料
 
@@ -196,12 +209,31 @@ python transfer_learning_complete.py \
 
 <p align="center"><em>供訓練與評估之中央氣象署 10 座作業化都卜勒雷達網（4 座 S 波段、6 座 C 波段）。</em></p>
 
-訓練與評估資料為 S 波段氣象雷達觀測（原始徑向速度 `bvel_raw` 與參考真值 `bvel_sfda` / `bvel_vdaqc`）以及對應的 NWP 模擬場。這些資料未在此重散布；前處理程式會將原始雷達／NWP 檔轉為訓練 patch。`data/locked_*_test_set.json` 記錄哪些案例組成固定測試集（其中的檔案路徑為佔位，需指向你自己的資料）。
+訓練與評估資料為中央氣象署 S 與 C 波段雷達網的觀測（原始徑向速度 `bvel_raw` 與參考真值 `bvel_sfda` / `bvel_vdaqc`）以及對應的 NWP 模擬場。這些資料未在此重散布；前處理程式會將原始雷達／NWP 檔轉為訓練 patch。`data/locked_*_test_set.json` 記錄哪些案例組成固定測試集（其中的檔案路徑為佔位，需指向你自己的資料）。
 
 ## 第三方比較模型
 
-評估時可與 **UNet-VDA**（美國作業化反折錯模型）比較。本專案**未**內含它 —— 請自其原始來源取得，並以 `--paper_model_path` 指向其 SavedModel 目錄。純推論不需要它。
+評估時與 **UNet-VDA**（MIT Lincoln Laboratory，MIT 授權）比較。本專案**未**內含它。評估模式預設自 `unet-vda-main/` 載入，缺少時會停止：
+
+```bash
+git clone https://github.com/mit-ll/unet-vda.git unet-vda-main
+```
+
+純推論與 `verify_weights.py` 不需要它。
 
 ## 授權
 
-以 MIT 授權釋出 —— 見 [LICENSE](LICENSE)。
+各部分適用不同條款：
+
+| 項目 | 授權 |
+|---|---|
+| 原始碼（`*.py`、`unet_model/`） | MIT —— 見 [LICENSE](LICENSE) |
+| 訓練好的模型權重（`pa_mcdnet_M6_headline.h5`，於 Zenodo） | CC BY 4.0。訓練權重之公開已獲中央氣象署同意。 |
+| 鎖定測試集定義（`data/locked_*_test_set.json`） | CC BY 4.0。內容為由 CWA 資料衍生之案例識別資訊與摘要統計（雷達站、時間、仰角、Nyquist 速度、折錯比例），經中央氣象署同意公開；不含雷達觀測值。 |
+| `docs/images/` 內的圖 | © 作者；案例圖由 CWA 資料衍生，經中央氣象署同意展示。不適用 MIT 或 CC BY 4.0；與正式刊出論文相同的圖，依 AMS 著作權聲明。 |
+| `mapdata201805310314/`（縣市界線） | 第三方資料，來源為內政部國土測繪中心，依政府資料開放授權條款第 1 版。 |
+| CWA 雷達觀測、作業參考產品、NWP 模擬場 | **未包含**，亦不適用此處任何授權；可向中央氣象署正式申請。 |
+
+## 引用
+
+使用本軟體請引用典藏版本（https://doi.org/10.5281/zenodo.XXXXXXXX）；引用資訊見 [CITATION.cff](CITATION.cff)。對應論文為 Lin, Zhang, Fang, and Chang, *Physics-Aware Deep Learning for Radar Doppler Velocity Dealiasing Using NWP Simulations and Observations*（投稿至 *Artificial Intelligence for the Earth Systems*）。
