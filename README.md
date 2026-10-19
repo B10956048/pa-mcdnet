@@ -2,6 +2,18 @@
 
 **English** | [繁體中文](README.zh-TW.md)
 
+> **Reproducibility archive for the AIES manuscript.** This repository is
+> archived on Zenodo as *PA-MCDNet: code, trained weights and evaluation-set
+> definitions for physics-aware Doppler radar velocity dealiasing*.
+> To reproduce the results reported in the manuscript, use and cite the
+> archived version: **https://doi.org/10.5281/zenodo.23479449**.
+> Concept DOI for all versions of PA-MCDNet:
+> https://doi.org/10.5281/zenodo.22167560.
+>
+> Software release: **v1.0.1** (Git tag `v1.0.1`). The "Version" field on the
+> Zenodo page numbers archive records, not software releases.
+> Step-by-step instructions: [REPRODUCE.md](REPRODUCE.md).
+
 A deep-learning model for **Doppler velocity dealiasing** of weather-radar data.
 When the true wind speed exceeds the Nyquist velocity, the observed radial
 velocity folds; PA-MCDNet restores it to a continuous, physically consistent
@@ -68,10 +80,13 @@ flowchart LR
 ├── transfer_learning_complete.py# training: Stage 1 (scratch) and Stage 2 (fine-tune)
 ├── manual_weight_transfer.py    # produce best_model_manual.h5 after Stage 2
 ├── test_nwp_comparison.py       # inference & evaluation (main entry point)
+├── verify_weights.py            # checks the released weights without CWA data
 ├── unet_model/                  # model definitions (encoder / decoders / layers)
 ├── mapdata201805310314/         # Taiwan shapefile for geo visualization
 ├── data/locked_*_test_set.json  # locked test-set definitions
 ├── docs/USAGE.md                # full parameter reference for every program
+├── REPRODUCE.md                 # reproduction guide for the manuscript
+├── CITATION.cff                 # citation metadata
 └── ... (helper modules & tools; see Programs below)
 ```
 
@@ -92,6 +107,9 @@ Full parameters for each program are in [docs/USAGE.md](docs/USAGE.md).
 | `transfer_learning_complete.py` | Training — Stage 1 (scratch) and Stage 2 (fine-tune) |
 | `manual_weight_transfer.py` | Produce the deployable `best_model_manual.h5` after Stage 2 |
 | `test_nwp_comparison.py` | Inference & evaluation (main entry point) |
+| `verify_weights.py` | Check the released weights (MD5, loading, synthetic test) without CWA data |
+| `analysis/compute_csi.py` | Case-averaged SR / FPR / RMSE / CSI from an evaluation summary |
+| `analysis/bootstrap_ci.py` | Paired bootstrap 95% CI between two evaluated models |
 | `build_locked_test_sets.py` | Build the fixed (locked) test sets |
 | `scan_realobs_alias.py` | Scan alias ratios of real observations and cache them |
 | `unet_model/` | Model definitions (encoder, decoders, layers) |
@@ -112,7 +130,7 @@ conda activate pyart2
 # Core packages (versions pinned to the tested environment)
 pip install tensorflow==2.10.0 \
             numpy==1.26.4 scipy==1.15.3 pandas==2.3.2 h5py==3.14.0 \
-            pyarrow==22.0.0 matplotlib==3.8.4 \
+            pyarrow==22.0.0 matplotlib==3.8.4 seaborn==0.13.2 tqdm==4.67.1 \
             scikit-image==0.25.1 scikit-learn==1.6.1 opencv-python==4.11.0.86
 ```
 
@@ -133,7 +151,7 @@ on a folder of PPI files:
 
 ```bash
 python test_nwp_comparison.py \
-  --model_path path/to/best_model_manual.h5 \
+  --model_path weights/pa_mcdnet_M6_headline.h5 \
   --inference_input path/to/ppi_folder \
   --output_dir infer_out \
   --use_physics_model \
@@ -148,10 +166,11 @@ geo images (`*_geo_*.png`). The `--inference_input` argument accepts a single
 > **Sample data.** Raw radar files are not bundled here: the CWA observations,
 > the operational reference products, and the NWP-simulated fields are all
 > subject to the Central Weather Administration's data policy and cannot be
-> redistributed by the authors (see the Data Availability Statement). To try the
-> pipeline, point `--inference_input` at your own PPI `.gz` files. The trained
-> weight is provided in the Zenodo deposit, and `data/locked_*_test_set.json`
-> here lists exactly which cases were used.
+> redistributed by the authors (see the Data Availability Statement). To check the
+> released weights without any CWA data, run
+> `python verify_weights.py --model_path weights/pa_mcdnet_M6_headline.h5`.
+> To run the pipeline on radar data, point `--inference_input` at your own PPI
+> `.gz` files. `data/locked_*_test_set.json` lists exactly which cases were used.
 
 ## Example
 
@@ -224,10 +243,12 @@ See [docs/USAGE.md](docs/USAGE.md) for every parameter.
 
 ## Model weights
 
-The trained weight is not tracked in the repository (size / data licensing). The
-deployable weight `best_model_manual.h5` (~79 MB) is available from the author,
-or on the deployment machine at `results/final_model/best_model_manual.h5`. Pass
-its path to `--model_path`.
+The trained weight is not tracked in the repository (file size). The final
+PA-MCDNet weight reported in the manuscript is archived on Zenodo
+(https://doi.org/10.5281/zenodo.23479449) as `pa_mcdnet_M6_headline.h5`
+(~82 MB, MD5 `1b1685ec72c7a765a6f957afb518a551`). Save it as
+`weights/pa_mcdnet_M6_headline.h5` and pass that path to `--model_path`.
+A weight you train yourself is produced as `best_model_manual.h5` (see Training).
 
 ## Data
 
@@ -235,7 +256,8 @@ its path to `--model_path`.
 
 <p align="center"><em>The ten-radar CWA operational Doppler network (4 S-band, 6 C-band) that provides the training and evaluation observations.</em></p>
 
-Training and evaluation data are S-band weather-radar observations (raw radial
+Training and evaluation data are observations from the CWA S- and C-band radar
+network (raw radial
 velocity `bvel_raw` and reference `bvel_sfda` / `bvel_vdaqc`) and matching
 NWP-simulated fields. These are not redistributed here; the preprocessing scripts
 turn the raw radar/NWP files into training patches. `data/locked_*_test_set.json`
@@ -244,11 +266,34 @@ to be pointed at your own data).
 
 ## Third-party comparison model
 
-The evaluation can compare against **UNet-VDA** (a U.S. operational dealiasing
-model). It is **not** bundled here — obtain it from its original source and
-point `--paper_model_path` at its SavedModel directory. Pure inference does not
-require it.
+The evaluation compares against **UNet-VDA** (MIT Lincoln Laboratory, MIT
+License). It is **not** bundled here. Evaluation mode loads it from
+`unet-vda-main/` by default and stops if it is missing:
+
+```bash
+git clone https://github.com/mit-ll/unet-vda.git unet-vda-main
+```
+
+Pure inference and `verify_weights.py` do not require it.
 
 ## License
 
-Released under the MIT License — see [LICENSE](LICENSE).
+Each part of this release has its own terms:
+
+| Component | License |
+|---|---|
+| Source code (`*.py`, `unet_model/`) | MIT — see [LICENSE](LICENSE) |
+| Trained model weights (`pa_mcdnet_M6_headline.h5`, on Zenodo) | CC BY 4.0. Public release of the trained weights is approved by the CWA. |
+| Locked test-set definitions (`data/locked_*_test_set.json`) | CC BY 4.0. They hold case identifiers and summary statistics derived from CWA data (station, time, elevation, Nyquist velocity, alias ratio), released with the CWA's permission; they contain no radar measurements. |
+| Figures in `docs/images/` | © the authors; case figures are derived from CWA data and shown with the CWA's permission. Not covered by the MIT or CC BY 4.0 licenses; figures that also appear in the published article are subject to the AMS copyright statement. |
+| `mapdata201805310314/` (county boundaries) | Third-party data from the National Land Surveying and Mapping Center, Ministry of the Interior (Taiwan), under the Open Government Data License, version 1.0. |
+| CWA radar observations, operational reference products, NWP-simulated fields | **Not included** and not covered by any license here; obtainable by formal request to the CWA. |
+
+## Citation
+
+If you use this software, please cite the archived version
+(https://doi.org/10.5281/zenodo.23479449); citation metadata is in
+[CITATION.cff](CITATION.cff). The accompanying manuscript is Lin, Zhang, Fang,
+and Chang, *Physics-Aware Deep Learning for Radar Doppler Velocity Dealiasing
+Using NWP Simulations and Observations* (submitted to *Artificial Intelligence
+for the Earth Systems*).

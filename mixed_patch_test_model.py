@@ -59,10 +59,15 @@ from physics_based_dealiasing_metrics import (
     compare_threshold_vs_physics_methods
 )
 
-# 導入梯度檢測工具
+# 導入梯度檢測工具（選用：僅用於 test_mixed_patch_model() 的診斷輸出，
+# 不影響論文指標；公開版未附 gradient_checker，缺少時自動略過）
 import sys
-sys.path.append(str(Path(__file__).parent / "simplified_quality_assessor"))
-from gradient_checker import compute_gradients_with_periodicity
+try:
+    from gradient_checker import compute_gradients_with_periodicity
+except ImportError:
+    def compute_gradients_with_periodicity(*args, **kwargs):
+        raise RuntimeError("optional gradient diagnostics unavailable "
+                           "(gradient_checker not included in the public release)")
 
 # 導入時間平滑工具
 from temporal_smoothing import temporal_smooth
