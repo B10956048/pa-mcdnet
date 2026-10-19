@@ -120,7 +120,17 @@ python test_nwp_comparison.py \
 
 Cases whose files are missing are skipped; the log reports how many, and the
 first missing path. Results are
-written to `eval_out/realobs_locked200/nwp_comparison_summary.json`.
+written to `eval_out/realobs_locked200/nwp_comparison_summary.json`; the
+command line that produced them is recorded in its `run_info.command` field.
+
+Expected `overall` values with all 200 cases present (the run reported in the
+manuscript):
+
+| Field | PA-MCDNet (`ours_*`) | UNet-VDA (`paper_*`) |
+|---|---|---|
+| `*_success_rate` | 0.8822 | 0.8939 |
+| `*_false_positive_rate` | 0.0039 | 0.0081 |
+| `*_rmse` (m/s) | 2.750 | 3.671 |
 
 **NWP simulations (100 locked cases).** `data/locked_nwp_test_set.json` lists
 each case by NWP run directory (`nwp_dir`) and file stem. The script also needs
