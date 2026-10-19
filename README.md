@@ -108,6 +108,8 @@ Full parameters for each program are in [docs/USAGE.md](docs/USAGE.md).
 | `manual_weight_transfer.py` | Produce the deployable `best_model_manual.h5` after Stage 2 |
 | `test_nwp_comparison.py` | Inference & evaluation (main entry point) |
 | `verify_weights.py` | Check the released weights (MD5, loading, synthetic test) without CWA data |
+| `analysis/compute_csi.py` | Case-averaged SR / FPR / RMSE / CSI from an evaluation summary |
+| `analysis/bootstrap_ci.py` | Paired bootstrap 95% CI between two evaluated models |
 | `build_locked_test_sets.py` | Build the fixed (locked) test sets |
 | `scan_realobs_alias.py` | Scan alias ratios of real observations and cache them |
 | `unet_model/` | Model definitions (encoder, decoders, layers) |

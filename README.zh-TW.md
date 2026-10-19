@@ -96,6 +96,8 @@ flowchart LR
 | `manual_weight_transfer.py` | Stage 2 後產生可部署的 `best_model_manual.h5` |
 | `test_nwp_comparison.py` | 推論與評估（主要進入點） |
 | `verify_weights.py` | 不需 CWA 資料即可檢查公開權重（MD5、載入、合成場測試） |
+| `analysis/compute_csi.py` | 由評估摘要計算逐案平均 SR / FPR / RMSE / CSI |
+| `analysis/bootstrap_ci.py` | 兩個模型間的配對 bootstrap 95% 信賴區間 |
 | `build_locked_test_sets.py` | 建立固定（鎖定）測試集 |
 | `scan_realobs_alias.py` | 掃描真實觀測的折返比例並快取 |
 | `unet_model/` | 模型定義（編碼器、解碼器、層） |

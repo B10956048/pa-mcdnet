@@ -132,6 +132,31 @@ manuscript):
 | `*_false_positive_rate` | 0.0039 | 0.0081 |
 | `*_rmse` (m/s) | 2.750 | 3.671 |
 
+**CSI and confidence intervals.** The manuscript's CSI and paired-bootstrap
+95% confidence intervals are computed from that summary file:
+
+```bash
+S=eval_out/realobs_locked200/nwp_comparison_summary.json
+python analysis/compute_csi.py $S
+python analysis/bootstrap_ci.py --a $S:ours --b $S:paper
+```
+
+Expected output (case-averaged over the 200 cases):
+
+| | SR % | FPR % | RMSE (m/s) | CSI % |
+|---|---|---|---|---|
+| PA-MCDNet | 88.22 | 0.39 | 2.75 | 84.62 |
+| UNet-VDA | 89.39 | 0.81 | 3.67 | 82.22 |
+
+| PA-MCDNet − UNet-VDA | Difference | 95% CI |
+|---|---|---|
+| SR (pp) | −1.17 | [−3.30, +0.99], not significant |
+| FPR (pp) | −0.42 | [−0.70, −0.16], significant |
+| RMSE (m/s) | −0.92 | [−1.62, −0.27], significant |
+
+Only the final PA-MCDNet weight is released, so comparisons that involve the
+ablation variants or earlier models require retraining them (Level 4).
+
 **NWP simulations (100 locked cases).** `data/locked_nwp_test_set.json` lists
 each case by NWP run directory (`nwp_dir`) and file stem. The script also needs
 the NWP patch file produced by `nwp_to_patches.py`, which it uses only to
