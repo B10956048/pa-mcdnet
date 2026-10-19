@@ -66,7 +66,20 @@ python verify_weights.py --model_path weights/pa_mcdnet_M6_headline.h5
 
 `verify_weights.py` checks the MD5 of the weight file, builds the model, loads
 the weights and dealiases a synthetic, analytically folded vortex. It needs no
-CWA data. Its output describes one synthetic field only; it is a functional
+CWA data. Expected output with the archived weight (CPU, ~1 min):
+
+```
+[OK] MD5 matches the archived weight (1b1685ec72c7a765a6f957afb518a551)
+[OK] model built and weights loaded: weights/pa_mcdnet_M6_headline.h5
+
+Synthetic vortex, V_nyq = 21.16 m/s, 141,120 valid gates
+  folded gates             : 9,822 (7.0%)
+  folded gates restored    : 9,822 (100.0%)
+  all gates in right fold  : 100.0%
+  RMSE vs. true velocity   : 0.00 m/s
+```
+
+ Its output describes one synthetic field only; it is a functional
 check, not a reproduction of the manuscript metrics.
 
 ## 2. Inference on your own radar files
